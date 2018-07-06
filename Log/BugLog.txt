@@ -1,0 +1,9 @@
+[2018-07-06 09:39:09]错误发生在：App_Code.rfpb4pwn，
+ 内容：未将对象引用设置到对象的实例。
+ [2018-07-06 09:39:09] 跟踪：   在 GetDBdata.getPtData(String date) 位置 d:\DevelopProject\全流程对账-old\App_Code\GetDBdata.cs:行号 96
+   在 _Default.<getDataList>d__15.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 472
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 365

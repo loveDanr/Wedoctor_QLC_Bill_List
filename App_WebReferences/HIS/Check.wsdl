@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="QueryRegisterList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="xml" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="hospitalname" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryRegisterListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="QueryRegisterListResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="QueryRegisterListSoapIn">
+    <wsdl:part name="parameters" element="tns:QueryRegisterList" />
+  </wsdl:message>
+  <wsdl:message name="QueryRegisterListSoapOut">
+    <wsdl:part name="parameters" element="tns:QueryRegisterListResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SpiServiceSoap">
+    <wsdl:operation name="QueryRegisterList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">HIS对账接口</wsdl:documentation>
+      <wsdl:input message="tns:QueryRegisterListSoapIn" />
+      <wsdl:output message="tns:QueryRegisterListSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SpiServiceSoap" type="tns:SpiServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="QueryRegisterList">
+      <soap:operation soapAction="http://tempuri.org/QueryRegisterList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SpiServiceSoap12" type="tns:SpiServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="QueryRegisterList">
+      <soap12:operation soapAction="http://tempuri.org/QueryRegisterList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SpiService">
+    <wsdl:port name="SpiServiceSoap" binding="tns:SpiServiceSoap">
+      <soap:address location="http://124.225.222.58/Check.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SpiServiceSoap12" binding="tns:SpiServiceSoap12">
+      <soap12:address location="http://124.225.222.58/Check.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
