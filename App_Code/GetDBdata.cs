@@ -49,8 +49,9 @@ using System.Data;
             }
             catch (Exception e)
             {
-            return rep;
             Logging.WriteBuglog(e);
+            return rep;
+          
                 
             }
             #endregion
@@ -74,11 +75,8 @@ using System.Data;
             QueryRequest qr = new QueryRequest(); 
             qr.billDate = date;
 
-            //海口市妇幼保健院
-            //key = "NDYV32674JEKWXTV6563CKMLMYFE8423";
-            //appCode = "QD113201703011044410001";
-            //mchid = "m113000004";
-
+           
+            
             // 序列化查询条件
             JavaScriptSerializer serializar = new JavaScriptSerializer();
             string result = serializar.Serialize(qr);

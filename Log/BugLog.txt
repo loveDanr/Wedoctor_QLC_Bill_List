@@ -1,9 +1,40 @@
-[2018-07-06 09:39:09]错误发生在：App_Code.rfpb4pwn，
- 内容：未将对象引用设置到对象的实例。
- [2018-07-06 09:39:09] 跟踪：   在 GetDBdata.getPtData(String date) 位置 d:\DevelopProject\全流程对账-old\App_Code\GetDBdata.cs:行号 96
-   在 _Default.<getDataList>d__15.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 472
---- 引发异常的上一位置中堆栈跟踪的末尾 ---
-   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
-   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
-   在 System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
-   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 365
+[2018-07-06 11:16:01]错误发生在：mscorlib，
+ 内容：对象不能从 DBNull 转换为其他类型。
+ [2018-07-06 11:16:01] 跟踪：   在 System.DBNull.System.IConvertible.ToDouble(IFormatProvider provider)
+   在 System.Convert.ToDouble(Object value)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 414
+[2018-07-06 11:20:17]错误发生在：mscorlib，
+ 内容：对象不能从 DBNull 转换为其他类型。
+ [2018-07-06 11:20:17] 跟踪：   在 System.DBNull.System.IConvertible.ToDouble(IFormatProvider provider)
+   在 System.Convert.ToDouble(Object value)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 410
+[2018-07-06 01:01:49]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:01:49] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382
+[2018-07-06 01:02:38]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:02:38] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382
+[2018-07-06 01:05:50]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:05:50] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382
+[2018-07-06 01:21:01]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:21:01] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382
+[2018-07-06 01:23:08]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:23:08] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382
+[2018-07-06 01:23:59]错误发生在：System.Data，
+ 内容：输入数组长度大于此表中的列数。
+ [2018-07-06 01:23:59] 跟踪：   在 System.Data.DataTable.NewRecordFromArray(Object[] value)
+   在 System.Data.DataRowCollection.Add(Object[] values)
+   在 _Default.<RefreshCheckData>d__0.MoveNext() 位置 d:\DevelopProject\全流程对账-old\Default.aspx.cs:行号 382

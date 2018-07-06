@@ -27,35 +27,16 @@ public partial class _Default : System.Web.UI.Page
     System.Data.DataTable DtAll = new System.Data.DataTable();
     System.Data.DataTable dt_wy = new System.Data.DataTable();
     DataTable dtWYResulthis = new DataTable();
+    public delegate string tLoadHISRequest(string request,string request2);//定义个获取his请求信息的委托
+    public delegate List<string> tLoadWYRequest(string request, string request2);//定义个获取微医请求信息的委托
+    public delegate string tLoadHISData(string request);//定义个获取his信息的委托
+    public delegate List<string[]> tLoadWYData(List<string> request);//定义个获取微医信息的委托
     protected void Page_Load(object sender, EventArgs e)
     {
         //testTime = "2018-06-19";
         if (!IsPostBack)
         {
-            #region datatable创建
-
-            dt_wy.Columns.Add("交易时间", typeof(string));
-            dt_wy.Columns.Add("业务平台流水", typeof(string));
-
-            dt_wy.Columns.Add("平台交易流水", typeof(string));
-            dt_wy.Columns.Add("业务退款流水", typeof(string));
-            dt_wy.Columns.Add("平台退款流水", typeof(string));
-            dt_wy.Columns.Add("交易金额", typeof(decimal));
-            dt_wy.Columns.Add("退款金额", typeof(decimal));
-            dt_wy.Columns.Add("补贴金额", typeof(decimal));
-            dt_wy.Columns.Add("实付金额", typeof(decimal));
-            dt_wy.Columns.Add("实退金额", typeof(decimal));
-            dt_wy.Columns.Add("第三方支付交易流水号", typeof(string));
-            dt_wy.Columns.Add("第三方支付退款流水号", typeof(string));
-            dt_wy.Columns.Add("支付类型", typeof(string));
-            dt_wy.Columns.Add("交易状态", typeof(string));
-            dt_wy.Columns.Add("退款状态", typeof(string));
-            dt_wy.Columns.Add("商户名称", typeof(string));
-            dt_wy.Columns.Add("商品名称", typeof(string));
-            dt_wy.Columns.Add("商户号", typeof(string));
-            dt_wy.Columns.Add("接入应用ID", typeof(string));
-            dt_wy.Columns.Add("第三方商户号", typeof(string));
-            #endregion
+       
             txt_startDate.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             txt_endDate.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             //System.Threading.Thread LoadServiceData = new System.Threading.Thread(new System.Threading.ThreadStart(LoadFromWebservice));
@@ -100,10 +81,7 @@ public partial class _Default : System.Web.UI.Page
         string dateCompare = txt_startDate.Text.Trim() + " "+"11:00:00";
         DateTime t4 = Convert.ToDateTime(dateCompare);
         if (DateTime.Compare(t1, t2) > 0)
-        {
-            //strErr += "截止日期必须在发布日期之后！";
-            //HttpContext.Current.Response.Write(" <script>alert('没有数据可导出！');");
-           // Response.Write(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
+        { 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "", "<script>alert('开始时间大于结束时间啦！');</script>");
         } if (DateTime.Compare(t4, t3) > 0)
         {
@@ -119,15 +97,16 @@ public partial class _Default : System.Web.UI.Page
         //}
         else
         {
-            string _requesthis = String.Empty;
+            tLoadHISRequest tloadhisRequest = new tLoadHISRequest(gethisReq);
+            IAsyncResult result = tloadhisRequest.BeginInvoke(txt_startDate.Text.Trim(), txt_endDate.Text.Trim(), null, null);
+            tLoadWYRequest tLoadwyRequest = new tLoadWYRequest(getReq);
+            IAsyncResult result2 = tLoadwyRequest.BeginInvoke(txt_startDate.Text.Trim(), txt_endDate.Text.Trim(), null, null);
+            //string _requesthis = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+            //List<string> _request = getReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+            string _requesthis = tloadhisRequest.EndInvoke(result);
+            List<string> _request = tLoadwyRequest.EndInvoke(result2);
 
-           // Thread t = new Thread(new ThreadStart(gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim())));
-            _requesthis = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
-            //Thread t = new Thread(new ThreadStart(delegate { gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim()); }));
-            //t.IsBackground = true;
-            //t.Start();
-            List<string> _request = getReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
-            //string request = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+
             RefreshCheckData(_request,_requesthis);
         }
     }
@@ -164,6 +143,7 @@ public partial class _Default : System.Web.UI.Page
 
             sum_TotalGet += Convert.ToDecimal(e.Row.Cells[8].Text);
             sum_Total_Refund += Convert.ToDecimal(e.Row.Cells[9].Text);
+
         }
         else if (e.Row.RowType == DataControlRowType.Footer)
         {
@@ -216,6 +196,7 @@ public partial class _Default : System.Web.UI.Page
             e.Row.Cells[4].Attributes.Add("style", "vnd.ms-excel.numberformat:@");
             e.Row.Cells[10].Attributes.Add("style", "vnd.ms-excel.numberformat:@");
             e.Row.Cells[11].Attributes.Add("style", "vnd.ms-excel.numberformat:@");
+            e.Row.Cells[12].Visible = false;
             e.Row.Cells[16].Visible = false;
             e.Row.Cells[17].Visible = false;
             e.Row.Cells[18].Visible = false;
@@ -339,41 +320,76 @@ public partial class _Default : System.Web.UI.Page
         return f;
 
     }
-    // 将系统类库提供的异步方法利用async封装起来
+    
 
     double Counthis = 0; double Amounthis = 0;
     #region  刷新数据明细数据
     /// <summary>
     /// 刷新数据明细数据
     /// </summary>
-    public async void RefreshCheckData(List<string> request, string request_his)
+    public void RefreshCheckData(List<string> request, string request_his)
     {
         #region 计算耗时方法，可删
         Stopwatch sw = new Stopwatch();
         sw.Start();
         #endregion
         initJavascript();
+        #region datatable创建
+
+        dt_wy.Columns.Add("交易时间", typeof(string));
+        dt_wy.Columns.Add("业务平台流水", typeof(string));
+
+        dt_wy.Columns.Add("平台交易流水", typeof(string));
+        dt_wy.Columns.Add("业务退款流水", typeof(string));
+        dt_wy.Columns.Add("平台退款流水", typeof(string));
+        dt_wy.Columns.Add("交易金额", typeof(decimal));
+        dt_wy.Columns.Add("退款金额", typeof(decimal));
+        dt_wy.Columns.Add("补贴金额", typeof(decimal));
+        dt_wy.Columns.Add("实付金额", typeof(decimal));
+        dt_wy.Columns.Add("实退金额", typeof(decimal));
+        dt_wy.Columns.Add("第三方支付交易流水号", typeof(string));
+        dt_wy.Columns.Add("第三方支付退款流水号", typeof(string));
+        dt_wy.Columns.Add("支付类型", typeof(string));
+        dt_wy.Columns.Add("交易状态", typeof(string));
+        dt_wy.Columns.Add("退款状态", typeof(string));
+        dt_wy.Columns.Add("商户名称", typeof(string));
+        dt_wy.Columns.Add("商品名称", typeof(string));
+        dt_wy.Columns.Add("商户号", typeof(string));
+        dt_wy.Columns.Add("接入应用ID", typeof(string));
+        dt_wy.Columns.Add("第三方商户号", typeof(string));
+        #endregion
         dt_wy.TableName = "ACCOUNT_LIST";
         System.Data.DataTable dt_his = new System.Data.DataTable();
         DataTable dtResulthis = new DataTable();
-        string strxmlhis = gethisXml(request_his);
-         dt_his = GetDBdata.XmlToDataTable(strxmlhis);
+        tLoadHISData tloadhis = new tLoadHISData(gethisXml);
+        IAsyncResult result = tloadhis.BeginInvoke(request_his, null, null);
+        tLoadWYData tloadwy = new tLoadWYData(getDataList);
+        IAsyncResult result_WY = tloadwy.BeginInvoke(request, null, null);
+        string strxmlhis = tloadhis.EndInvoke(result);
+        List<string[]> response2 = tloadwy.EndInvoke(result_WY);// gethisXml(request_his);
+        //string strxmlhis = gethisXml(request_his);
+        //tLoadWYData tloadwy = new tLoadWYData(getDataList);
+        //IAsyncResult result_WY = tloadwy.BeginInvoke(request, null, null);
+        dt_his = GetDBdata.XmlToDataTable(strxmlhis);
         dtResulthis = GetDBdata.GetResult(dt_his);
         HIS_RowsCount = dt_his.Rows.Count;
-        foreach (DataRow dr in dtResulthis.Rows)
+ 
+                foreach (DataRow dr in dtResulthis.Rows)
         {
             Counthis += double.Parse(dr["Counthis"].ToString());
             Amounthis += double.Parse(dr["Amounthis"].ToString());
-        }
+                }
+            
 
-        HIS_TotalFeeCount.Text = Convert.ToDecimal(Amounthis).ToString("f2") + "元";
+            HIS_TotalFeeCount.Text = Convert.ToDecimal(Amounthis).ToString("f2") + "元";
         HIS_TotalDealCount.Text = Convert.ToString(Counthis) + "笔";
         HIS_TotalFeeCount.Visible = false; HIS_TotalDealCount.Visible = false;
-      
+
         try
-        { 
-            List<string[]> response = getDataList(request); ;// getDataList(request);
-            List<string> result = new List<string>();
+        {
+            //List<string[]> response = tloadwy.EndInvoke(result_WY);// getDataList(request); ;// getDataList(request);
+            List<string[]> response = response2;//getDataList(request);
+            // List<string> result = new List<string>();
             int _count = response.Count;
             sum_totalCount = _count;
 
@@ -446,7 +462,7 @@ public partial class _Default : System.Web.UI.Page
             TimeSpan ts2 = sw.Elapsed;
             Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);   //结束耗时显示多久
         }
-
+         
 
     }
 
@@ -536,6 +552,7 @@ public partial class _Default : System.Web.UI.Page
     /// 获取his入参
     /// </summary>
     public string gethisReq(string begindata, string enddata)
+       
     {
         string req = string.Empty;
         string request = string.Empty;
@@ -701,27 +718,7 @@ public partial class _Default : System.Web.UI.Page
 
         if (e.Row.RowType == DataControlRowType.Footer)
         {
-            //e.Row.Cells[0].Attributes.Add("colspan", "3");
             e.Row.Cells[0].Text = "合计";
-
-            //e.Row.Cells[1].Text = "";//
-
-
-
-            //e.Row.Cells[2].Font.Bold = true;
-
-
-            //e.Row.Cells[3].Text = "";//
-
-
-            //e.Row.Cells[4].Text = "";//
-
-
-            //e.Row.Cells[5].Text = "";//
-
-
-            //e.Row.Cells[6].Text = "";
-            //e.Row.Cells[6].HorizontalAlign = HorizontalAlign.Center;
 
         }
         if (e.Row.RowType == DataControlRowType.DataRow || e.Row.RowType == DataControlRowType.Header)
