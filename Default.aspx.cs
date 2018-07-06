@@ -24,15 +24,42 @@ public partial class _Default : System.Web.UI.Page
     public int sum_totalCount = 0;
     public decimal sum_TotalGet = 0;
     public decimal sum_Total_Refund = 0;
+    System.Data.DataTable DtAll = new System.Data.DataTable();
+    System.Data.DataTable dt_wy = new System.Data.DataTable();
+    DataTable dtWYResulthis = new DataTable();
     protected void Page_Load(object sender, EventArgs e)
     {
         //testTime = "2018-06-19";
         if (!IsPostBack)
         {
+            #region datatable创建
+
+            dt_wy.Columns.Add("交易时间", typeof(string));
+            dt_wy.Columns.Add("业务平台流水", typeof(string));
+
+            dt_wy.Columns.Add("平台交易流水", typeof(string));
+            dt_wy.Columns.Add("业务退款流水", typeof(string));
+            dt_wy.Columns.Add("平台退款流水", typeof(string));
+            dt_wy.Columns.Add("交易金额", typeof(decimal));
+            dt_wy.Columns.Add("退款金额", typeof(decimal));
+            dt_wy.Columns.Add("补贴金额", typeof(decimal));
+            dt_wy.Columns.Add("实付金额", typeof(decimal));
+            dt_wy.Columns.Add("实退金额", typeof(decimal));
+            dt_wy.Columns.Add("第三方支付交易流水号", typeof(string));
+            dt_wy.Columns.Add("第三方支付退款流水号", typeof(string));
+            dt_wy.Columns.Add("支付类型", typeof(string));
+            dt_wy.Columns.Add("交易状态", typeof(string));
+            dt_wy.Columns.Add("退款状态", typeof(string));
+            dt_wy.Columns.Add("商户名称", typeof(string));
+            dt_wy.Columns.Add("商品名称", typeof(string));
+            dt_wy.Columns.Add("商户号", typeof(string));
+            dt_wy.Columns.Add("接入应用ID", typeof(string));
+            dt_wy.Columns.Add("第三方商户号", typeof(string));
+            #endregion
             txt_startDate.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             txt_endDate.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             //System.Threading.Thread LoadServiceData = new System.Threading.Thread(new System.Threading.ThreadStart(LoadFromWebservice));
-            //LoadServiceData.Start();
+            //LoadFromWebservice();
 
 }
     }
@@ -50,15 +77,18 @@ public partial class _Default : System.Web.UI.Page
         int intMinute = e.SignalTime.Minute;
         int intSecond = e.SignalTime.Second;
         // 定制时间； 比如 在10：30 ：00 的时候执行某个函数
-        int iHour = 18;
-        int iMinute =34;
+        int iHour = 11;
+        int iMinute =15;
         int iSecond = 00;
         // 设置　每天的１０：３０：００开始执行程序
         if (intHour == iHour && intMinute == iMinute && intSecond == iSecond)
         { 
-              txt_startDate.Text = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-        List<string> _request = getReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
-        //RefreshCheckData(_request,);
+              txt_startDate.Text = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
+            txt_endDate.Text = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
+            List<string> _request = getReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+          string  _requesthis = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+            //RefreshCheckData(_request,);
+            RefreshCheckData(_request, _requesthis);
         }
       
     }
@@ -277,9 +307,6 @@ public partial class _Default : System.Web.UI.Page
         else
         {
             return;
-            // Response.Write("<script>alert('没有数据可导出！')</script>");
-            //Page.ClientScript.RegisterStartupScript(this.GetType(), "", "<script>alert('没有数据可导出！');</script>");
-            //Response.Write(" <script>function window.onload() {alert( ' 弹出的消息' ); } </script> ");
          
         }
     }
@@ -314,27 +341,24 @@ public partial class _Default : System.Web.UI.Page
     }
     // 将系统类库提供的异步方法利用async封装起来
 
- 
+    double Counthis = 0; double Amounthis = 0;
     #region  刷新数据明细数据
     /// <summary>
     /// 刷新数据明细数据
     /// </summary>
     public async void RefreshCheckData(List<string> request, string request_his)
     {
+        #region 计算耗时方法，可删
         Stopwatch sw = new Stopwatch();
         sw.Start();
+        #endregion
         initJavascript();
-        System.Data.DataTable DtAll = new System.Data.DataTable();
-        System.Data.DataTable dt_wy = new System.Data.DataTable();
         dt_wy.TableName = "ACCOUNT_LIST";
-        System.Data.DataTable dt_his = new System.Data.DataTable(); 
-DataTable dtResulthis = new DataTable();
-        DataTable dtWYResulthis = new DataTable();
-        //Task<string> t1 = gethisXml(request_his);
-        string strxmlhis = gethisXml(request_his);//t1.Result;
-        double Counthis = 0; double Amounthis = 0;
-       
-        dt_his = GetDBdata.XmlToDataTable(strxmlhis);
+        System.Data.DataTable dt_his = new System.Data.DataTable();
+        DataTable dtResulthis = new DataTable();
+        string strxmlhis = gethisXml(request_his);
+         dt_his = GetDBdata.XmlToDataTable(strxmlhis);
+        dtResulthis = GetDBdata.GetResult(dt_his);
         HIS_RowsCount = dt_his.Rows.Count;
         foreach (DataRow dr in dtResulthis.Rows)
         {
@@ -345,30 +369,7 @@ DataTable dtResulthis = new DataTable();
         HIS_TotalFeeCount.Text = Convert.ToDecimal(Amounthis).ToString("f2") + "元";
         HIS_TotalDealCount.Text = Convert.ToString(Counthis) + "笔";
         HIS_TotalFeeCount.Visible = false; HIS_TotalDealCount.Visible = false;
-        #region datatable创建
-
-        dt_wy.Columns.Add("交易时间", typeof(string));
-        dt_wy.Columns.Add("业务平台流水", typeof(string));
-
-        dt_wy.Columns.Add("平台交易流水", typeof(string));
-        dt_wy.Columns.Add("业务退款流水", typeof(string));
-        dt_wy.Columns.Add("平台退款流水", typeof(string));
-        dt_wy.Columns.Add("交易金额", typeof(decimal));
-        dt_wy.Columns.Add("退款金额", typeof(decimal));
-        dt_wy.Columns.Add("补贴金额", typeof(decimal));
-        dt_wy.Columns.Add("实付金额", typeof(decimal));
-        dt_wy.Columns.Add("实退金额", typeof(decimal));
-        dt_wy.Columns.Add("第三方支付交易流水号", typeof(string));
-        dt_wy.Columns.Add("第三方支付退款流水号", typeof(string));
-        dt_wy.Columns.Add("支付类型", typeof(string));
-        dt_wy.Columns.Add("交易状态", typeof(string));
-        dt_wy.Columns.Add("退款状态", typeof(string));
-        dt_wy.Columns.Add("商户名称", typeof(string));
-        dt_wy.Columns.Add("商品名称", typeof(string));
-        dt_wy.Columns.Add("商户号", typeof(string));
-        dt_wy.Columns.Add("接入应用ID", typeof(string));
-        dt_wy.Columns.Add("第三方商户号", typeof(string));
-        #endregion
+      
         try
         { 
             List<string[]> response = getDataList(request); ;// getDataList(request);
@@ -411,13 +412,9 @@ DataTable dtResulthis = new DataTable();
                     different_money = different_money + (Convert.ToDouble(DtAll.Rows[i]["Amounthis"]) - Convert.ToDouble(DtAll.Rows[i]["wxAmount"]));
                     DtAll.Rows[i]["different"] = different_money.ToString("f2");
                     different_money = 0;
-
-
                 }
 
             }
-
-
             this.GridView_Count.DataSource = DtAll.DefaultView;
             this.GridView_Count.DataBind();
             #endregion
@@ -428,11 +425,8 @@ DataTable dtResulthis = new DataTable();
                 if (DtAll.Rows[k][6].ToString() != "0")
                 {
                     GridView_Count.Rows[k].BackColor = System.Drawing.Color.Red;
-                    //Logging.WriteHISlog("记录日志：","HIS的CARD_NO="+dt_his.Rows[i][3].ToString()+ "\r\n"+"微医的HOSP_PATIENT_ID="+ dt_wy.Rows[k][11].ToString() + "\r\n" + "HIS的TRANS_NO="+dt_his.Rows[i][13].ToString()+"微医的HOSP_ORDER_ID = "+ dt_wy.Rows[k][1].ToString() + "\r\n" + "HIS的TRANS_TYPE=" + dt_his.Rows[i][1].ToString() + "\r\n" + "微医的ORDER_TYPE=" + dt_wy.Rows[k][2].ToString() + "");
                 }
-
             }
-
             #endregion
 
         }
@@ -450,7 +444,7 @@ DataTable dtResulthis = new DataTable();
             Logging.WriteHISlog(txt_startDate.Text + "至" + txt_endDate.Text + "的日志", strxmlhis);
             sw.Stop();
             TimeSpan ts2 = sw.Elapsed;
-            Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
+            Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);   //结束耗时显示多久
         }
 
 
