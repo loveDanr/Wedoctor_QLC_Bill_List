@@ -315,7 +315,8 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     public async void RefreshCheckData(List<string> request, string request_his)
     {
-        initJavascript(); System.Data.DataTable DtAll = new System.Data.DataTable();
+        initJavascript();
+        System.Data.DataTable DtAll = new System.Data.DataTable();
         System.Data.DataTable dt_wy = new System.Data.DataTable(); dt_wy.TableName = "ACCOUNT_LIST";
         System.Data.DataTable dt_his = new System.Data.DataTable(); DataTable dtResulthis = new DataTable();
         DataTable dtWYResulthis = new DataTable();
