@@ -89,7 +89,13 @@ public partial class _Default : System.Web.UI.Page
         //}
         else
         {
-            string _requesthis = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+            string _requesthis = String.Empty;
+
+           // Thread t = new Thread(new ThreadStart(gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim())));
+            _requesthis = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
+            //Thread t = new Thread(new ThreadStart(delegate { gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim()); }));
+            //t.IsBackground = true;
+            //t.Start();
             List<string> _request = getReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
             //string request = gethisReq(txt_startDate.Text.Trim(), txt_endDate.Text.Trim());
             RefreshCheckData(_request,_requesthis);
@@ -315,13 +321,17 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     public async void RefreshCheckData(List<string> request, string request_his)
     {
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         initJavascript();
         System.Data.DataTable DtAll = new System.Data.DataTable();
-        System.Data.DataTable dt_wy = new System.Data.DataTable(); dt_wy.TableName = "ACCOUNT_LIST";
-        System.Data.DataTable dt_his = new System.Data.DataTable(); DataTable dtResulthis = new DataTable();
+        System.Data.DataTable dt_wy = new System.Data.DataTable();
+        dt_wy.TableName = "ACCOUNT_LIST";
+        System.Data.DataTable dt_his = new System.Data.DataTable(); 
+DataTable dtResulthis = new DataTable();
         DataTable dtWYResulthis = new DataTable();
-        Task<string> t1 = gethisXml(request_his);
-        string strxmlhis = t1.Result;//gethisXml(request_his);
+        //Task<string> t1 = gethisXml(request_his);
+        string strxmlhis = gethisXml(request_his);//t1.Result;
         double Counthis = 0; double Amounthis = 0;
        
         dt_his = GetDBdata.XmlToDataTable(strxmlhis);
@@ -358,13 +368,10 @@ public partial class _Default : System.Web.UI.Page
         dt_wy.Columns.Add("商户号", typeof(string));
         dt_wy.Columns.Add("接入应用ID", typeof(string));
         dt_wy.Columns.Add("第三方商户号", typeof(string));
-        //string his_dealTime,his_orderId,his_fee,wy_dealTime,wy_orderId,wy_fee;
         #endregion
         try
-        {
-            Task<List<string[]>> t2 = getDataList(request);
-            var end =  await getDataList(request);
-            List<string[]> response = end;// getDataList(request);
+        { 
+            List<string[]> response = getDataList(request); ;// getDataList(request);
             List<string> result = new List<string>();
             int _count = response.Count;
             sum_totalCount = _count;
@@ -441,7 +448,9 @@ public partial class _Default : System.Web.UI.Page
             string LogXml = GetDBdata.DataTable2Xml(dt_wy);
             Logging.WriteWYlog(txt_startDate.Text.Trim() + "至" + txt_endDate.Text.Trim() + "的明细日志", LogXml);
             Logging.WriteHISlog(txt_startDate.Text + "至" + txt_endDate.Text + "的日志", strxmlhis);
-
+            sw.Stop();
+            TimeSpan ts2 = sw.Elapsed;
+            Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
         }
 
 
@@ -452,7 +461,12 @@ public partial class _Default : System.Web.UI.Page
     /// 获取his交易数据
     /// </summary>
     /// <returns></returns>
-    public async Task<string>  gethisXml(string request)
+    //public async Task<string>  gethisXml(string request)
+    //{
+    //    string response = GetDBdata.gethis(request);
+    //    return response;
+    //}
+    public string gethisXml(string request)
     {
         string response = GetDBdata.gethis(request);
         return response;
@@ -460,9 +474,9 @@ public partial class _Default : System.Web.UI.Page
 
     /// <summary>
     /// 获取平台交易明细账数据
-    /// </summary>
+    /// </summary>async Task<List<string[]>>
     /// <returns></returns>
-    public async Task<List<string[]>>  getDataList(List<string> listdate)
+    public static List<string[]>  getDataList(List<string> listdate)
     {
         List<string[]> list = new List<string[]>();
         List<string[]> response = new List<string[]>();
