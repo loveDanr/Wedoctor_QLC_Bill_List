@@ -97,31 +97,29 @@ using System.Data;
             ptData ptdata = serializar.Deserialize<ptData>(response);
 
             List<string[]> listData = new List<string[]>();
-            //List<WedoctorFileData> listData = new List<WedoctorFileData>();
-            
-            if (ptdata.returnCode == "0000")
+        //List<WedoctorFileData> listData = new List<WedoctorFileData>();
+
+        if (ptdata.returnCode == "0000")
+        {
+            string str = ptdata.fileContent;
+            var arr = str.Split(Environment.NewLine.ToCharArray());
+            arr = arr.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+
+            foreach (string s in arr)
             {
-                string str = ptdata.fileContent;
-                var arr = str.Split(Environment.NewLine.ToCharArray());
-                arr = arr.Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                
-                
-                foreach (string s in arr)
-                {
-                    //WedoctorFileData wd = new WedoctorFileData();
-                    var wd = s.Replace("'","").Split(',');
-                    listData.Add(wd);
-                }
-                
-               
+                //WedoctorFileData wd = new WedoctorFileData();
+                var wd = s.Replace("'", "").Split(',');
+                listData.Add(wd);
             }
-            else
+
+
+        }
+        else
             {
-                string msg = date.Substring(0, 4) + "年" + date.Substring(4, 2) + "月" + date.Substring(6, 2) + "日";
-                msg = msg + "平台账单由于微信后台账单生成时间限制导致账单" + ptdata.returnMsg + "，请于11点后查看！";
-                //MessageBox.Show(msg);
-               // HttpContext.Current.Response.Write(" <script>alert('没有数据可导出！');");
-               // return listData = null ;
+            //    string msg = date.Substring(0, 4) + "年" + date.Substring(4, 2) + "月" + date.Substring(6, 2) + "日";
+            //    msg = msg + "平台账单由于微信后台账单生成时间限制导致账单" + ptdata.returnMsg + "，请于11点后查看！";
+            return null;
                 
             }
 
