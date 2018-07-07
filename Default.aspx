@@ -41,11 +41,11 @@
              CssClass="button button-3d button-caution" onclick="download_btn_Click" /></td>
                 </tr>
               <tr align="center">
-                  <td colspan="4" align="center" style="font-weight: bold; font-size: 15px;padding-bottom:5px; padding-left:100px;text-align:center;color:#ff0000">提示：对账数据的最大显示日期为当天的前一天！</br>(由于微信后台账单生成时间限制，前一天账单会在第二天11点后生成！)
-                  <dx:ASPxLabel ID="TotalDealCount" runat="server" Text="" Font-Size="15px" Font-Bold="True"></dx:ASPxLabel>&nbsp;&nbsp;<dx:ASPxLabel ID="TotalDealMoneyCount" runat="server" Text="" Font-Size="15px" Font-Bold="True"></dx:ASPxLabel></td>
+                  <td colspan="4" align="center" style="font-weight: bold; font-size: 15px;padding-bottom:5px; padding-left:100px;text-align:center;color:#ff0000">提示：对账数据的最大显示日期为当天的前一天！</br>(由于微信后台账单生成时间限制，</br>前一天账单会在第二天11点后生成！)
+                  <dx:ASPxLabel ID="TotalDealCount" runat="server" Text="" Font-Size="15px" Font-Bold="True" Visible="false"></dx:ASPxLabel>&nbsp;&nbsp;<dx:ASPxLabel ID="TotalDealMoneyCount" runat="server" Text="" Font-Size="15px" Font-Bold="True" Visible="false"></dx:ASPxLabel></td>
               </tr>
               <tr align="center">
-                  <td colspan="4" align="center" style="font-weight: bold; font-size: 15px;padding-bottom:5px; padding-left:100px;text-align:center;color:#ff0000"><dx:ASPxLabel runat="server" ID="HIS_TotalDealCount" Font-Bold="True" Font-Size="15px"></dx:ASPxLabel>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dx:ASPxLabel runat="server" ID="HIS_TotalFeeCount" Font-Size="15px" Font-Bold="True"></dx:ASPxLabel></td>
+                  <td colspan="4" align="center" style="font-weight: bold; font-size: 15px;padding-bottom:5px; padding-left:100px;text-align:center;color:#ff0000"><dx:ASPxLabel runat="server" ID="HIS_TotalDealCount" Font-Bold="True" Font-Size="15px" Visible="false"></dx:ASPxLabel>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dx:ASPxLabel runat="server" ID="HIS_TotalFeeCount" Font-Size="15px" Font-Bold="True" Visible="false"></dx:ASPxLabel></td>
               </tr>
                <tr align="center">
                   <td colspan="4" align="center" style="font-weight: bold; font-size: 15px;padding-bottom:5px; padding-left:100px;text-align:center;color:#ff0000"><dx:ASPxLabel runat="server" ID="Notice" Font-Bold="True" Font-Size="15px" Text=""></dx:ASPxLabel></td>

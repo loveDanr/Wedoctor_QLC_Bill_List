@@ -20,7 +20,7 @@ using System.Net.Mail;
 
 public partial class _Default : System.Web.UI.Page
 {
-    public int HIS_RowsCount=0;
+    //public int HIS_RowsCount=0;
     public int sum_totalCount = 0;
     public decimal sum_TotalGet = 0;
     public decimal sum_Total_Refund = 0;
@@ -281,14 +281,46 @@ public partial class _Default : System.Web.UI.Page
 
     protected void download_btn_Click(object sender, EventArgs e)
     {
-        if (this.GridView.Rows.Count != null && this.GridView.Rows.Count != 0)
+        if (Notice.Text.Contains("恭"))
         {
-            toExcel(this.GridView, txt_startDate.Text.Trim() + "至" + txt_endDate.Text.Trim() + "对账表");
+            if (this.GridView_Count.Rows.Count != 0)
+            {
+                if (txt_startDate.Text.Trim() == txt_endDate.Text.Trim())
+                {
+                    toExcel(this.GridView_Count, txt_startDate.Text.Trim() + "的对账总表");
+                }
+                else if (txt_startDate.Text.Trim() != txt_endDate.Text.Trim())
+                {
+                    toExcel(this.GridView_Count, txt_startDate.Text.Trim() + "至" + txt_endDate.Text.Trim() + "的对账总表");
+                }
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "", "<script>alert('没有数据可导出！');</script>");
+
+            }
         }
         else
         {
-            return;
-         
+            if (Notice.Text.Contains("不"))
+            {
+                if (this.GridView.Rows.Count != 0)
+                {
+                    if (txt_startDate.Text.Trim() == txt_endDate.Text.Trim())
+                    {
+                        toExcel(this.GridView, txt_startDate.Text.Trim() + "的对账明细表");
+                    }
+                    else if (txt_startDate.Text.Trim() != txt_endDate.Text.Trim())
+                    {
+                        toExcel(this.GridView, txt_startDate.Text.Trim() + "至" + txt_endDate.Text.Trim() + "的对账明细表");
+                    }
+                }
+                else
+                {
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "", "<script>alert('没有数据可导出！');</script>");
+
+                }
+            }
         }
     }
     /// <summary>
@@ -372,7 +404,7 @@ public partial class _Default : System.Web.UI.Page
         //IAsyncResult result_WY = tloadwy.BeginInvoke(request, null, null);
         dt_his = GetDBdata.XmlToDataTable(strxmlhis);
         dtResulthis = GetDBdata.GetResult(dt_his);
-        HIS_RowsCount = dt_his.Rows.Count;
+       // HIS_RowsCount = dt_his.Rows.Count;
  
                 foreach (DataRow dr in dtResulthis.Rows)
         {
@@ -381,21 +413,21 @@ public partial class _Default : System.Web.UI.Page
                 }
             
 
-            HIS_TotalFeeCount.Text = Convert.ToDecimal(Amounthis).ToString("f2") + "元";
-        HIS_TotalDealCount.Text = Convert.ToString(Counthis) + "笔";
-        HIS_TotalFeeCount.Visible = false; HIS_TotalDealCount.Visible = false;
+         HIS_TotalFeeCount.Text = Convert.ToDecimal(Amounthis).ToString("f2") + "元";
+       // HIS_TotalDealCount.Text = Convert.ToString(Counthis) + "笔";
+       HIS_TotalFeeCount.Visible = false; HIS_TotalDealCount.Visible = false;
 
         try
         {
             //List<string[]> response = tloadwy.EndInvoke(result_WY);// getDataList(request); ;// getDataList(request);
-            List<string[]> response = response2;//getDataList(request);
+           // List<string[]> response = response2;//getDataList(request);
             // List<string> result = new List<string>();
-            int _count = response.Count;
-            sum_totalCount = _count;
+            //int _count = response.Count;
+            sum_totalCount = response2.Count; //_count;
 
-            for (int k = 0; k < _count; k++)
+            for (int k = 0; k < sum_totalCount; k++)
             {
-                dt_wy.Rows.Add(response[k]);
+                dt_wy.Rows.Add(response2[k]);
             }
              
             this.GridView.DataSource = dt_wy.DefaultView;
@@ -461,6 +493,7 @@ public partial class _Default : System.Web.UI.Page
             sw.Stop();
             TimeSpan ts2 = sw.Elapsed;
             Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);   //结束耗时显示多久
+            Logging.WriteKeylog("Stopwatch总共花费",Convert.ToString(ts2.TotalMilliseconds));
         }
          
 
@@ -671,7 +704,7 @@ public partial class _Default : System.Web.UI.Page
             e.Row.Cells[6].Text = different_money.ToString("f2");
 
         }
-        #region 提升语内容设置
+        #region 提示语内容设置
         if (e.Row.Cells[6].Text == "0.00")
         {
             DetailsListTitle.Visible = false;
