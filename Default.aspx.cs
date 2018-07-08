@@ -429,22 +429,24 @@ public partial class _Default : System.Web.UI.Page
             {
                 dt_wy.Rows.Add(response2[k]);
             }
-             
-            this.GridView.DataSource = dt_wy.DefaultView;
-            this.GridView.DataBind();
-            for (int i = dt_his.Rows.Count - 1; i >= 0; i--)
-            {
-                for (int k = 0; k < dt_wy.Rows.Count; k++)
+            
+                this.GridView.DataSource = dt_wy.DefaultView;
+                this.GridView.DataBind();
+                for (int i = dt_his.Rows.Count - 1; i >= 0; i--)
                 {
-                    if (dt_his.Rows[i][1].ToString() == dt_wy.Rows[k][1].ToString())
+                    for (int k = 0; k < dt_wy.Rows.Count; k++)
                     {
-                        GridView.Rows[k].BackColor = System.Drawing.Color.Green;
-                        //Logging.WriteHISlog("记录日志：","HIS的ORDER_ID="+dt_his.Rows[i][3].ToString()+ "\r\n"+"微医的平台订单号="+ dt_wy.Rows[k][11].ToString() + "\r\n" + "HIS的TRANS_NO="+dt_his.Rows[i][13].ToString()+"微医的HOSP_ORDER_ID = "+ dt_wy.Rows[k][1].ToString() + "\r\n" + "HIS的TRANS_TYPE=" + dt_his.Rows[i][1].ToString() + "\r\n" + "微医的ORDER_TYPE=" + dt_wy.Rows[k][2].ToString() + "");
+                        if (dt_his.Rows[i][1].ToString() == dt_wy.Rows[k][1].ToString())
+                        {
+                            GridView.Rows[k].BackColor = System.Drawing.Color.Green;
+                            //Logging.WriteHISlog("记录日志：","HIS的ORDER_ID="+dt_his.Rows[i][3].ToString()+ "\r\n"+"微医的平台订单号="+ dt_wy.Rows[k][11].ToString() + "\r\n" + "HIS的TRANS_NO="+dt_his.Rows[i][13].ToString()+"微医的HOSP_ORDER_ID = "+ dt_wy.Rows[k][1].ToString() + "\r\n" + "HIS的TRANS_TYPE=" + dt_his.Rows[i][1].ToString() + "\r\n" + "微医的ORDER_TYPE=" + dt_wy.Rows[k][2].ToString() + "");
+                        }
+
                     }
 
                 }
-
-            }
+           
+           
             #region 统计所有数据
             dtResulthis = GetDBdata.GetResult(dt_his);
             dtWYResulthis = GetDBdata.GetResult(dt_wy);
