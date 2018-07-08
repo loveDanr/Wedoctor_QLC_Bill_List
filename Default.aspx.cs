@@ -362,8 +362,8 @@ public partial class _Default : System.Web.UI.Page
     public void RefreshCheckData(List<string> request, string request_his)
     {
         #region 计算耗时方法，可删
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
+        //Stopwatch sw = new Stopwatch();
+        //sw.Start();
         #endregion
         initJavascript();
         #region datatable创建
@@ -492,10 +492,10 @@ public partial class _Default : System.Web.UI.Page
             string LogXml = GetDBdata.DataTable2Xml(dt_wy);
             Logging.WriteWYlog(txt_startDate.Text.Trim() + "至" + txt_endDate.Text.Trim() + "的明细日志", LogXml);
             Logging.WriteHISlog(txt_startDate.Text + "至" + txt_endDate.Text + "的日志", strxmlhis);
-            sw.Stop();
-            TimeSpan ts2 = sw.Elapsed;
-            Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);   //结束耗时显示多久
-            Logging.WriteKeylog("Stopwatch总共花费",Convert.ToString(ts2.TotalMilliseconds));
+            //sw.Stop();
+            //TimeSpan ts2 = sw.Elapsed;
+            //Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);   //结束耗时显示多久
+            //Logging.WriteKeylog("Stopwatch总共花费",Convert.ToString(ts2.TotalMilliseconds));
         }
          
 
